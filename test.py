@@ -16,33 +16,30 @@ bindata = b""
 
 writepath = "./mod.bin"
 START = 0x144867
-END = 0x144F2F
+END = 0x144F33
 count1 = 0
 count2 = 1
 
+datalist = []
 def main():
     """ファイルを読み込む
     """
-    with open('EXE6.gba','rb') as f:
+    with open('EXE6.bin','rb') as f:
         rom_data = f.read()
-        
+        offsetc = 0
         #rom_data1 = rom_data[:0xF6BD6] + b'\x05' + rom_data[0xF6BD6+1:]
-        #rom_data = rom_data[START + count1 : START + count2]
-        rom_data = rom_data[START:END + 1]
 
-        count = 0
-        for i in rom_data:
-            if i == b'\xab':
-                print("ok")
-                count += 1
-        print(count)
+        #改造カードのデータをスライス
+        mod_data = rom_data[START:END + 1]
+        print(type(mod_data))
+        for i in mod_data:
+            offsetc += 1
+            if i == 0xAB:
+                datalist = rom_data[START : START + offsetc]
+                print(datalist)
+                break
 
-        '''
-        test = list(rom_data)
-        #リストを2つの要素ずつ連結してサブリストを作る
-        test2 = [test[i:i+2] for i in range(0,238,2)]
-        print(test2)
-        '''
+
         
 def writef(f):
     with open(writepath, "wb") as writeFile:
